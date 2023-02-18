@@ -14,6 +14,11 @@
 namespace agl
 {
    enum PrimitiveType {UNDEFINED, LINES, TRIANGLES};
+   struct draw{
+      int x;
+      int y; 
+      Pixel pix_color;
+   };
    class Canvas
    {
    public:
@@ -36,6 +41,8 @@ namespace agl
       void begin(PrimitiveType type);
       void end();
 
+      bruh how u texting me and showing me the texts
+          force of habit
       // Specifiy a vertex at raster position (x,y)
       // x corresponds to the column; y to the row
       void vertex(int x, int y);
@@ -48,6 +55,22 @@ namespace agl
 
    private:
       Image _canvas;
+      Pixel curpix;
+      PrimitiveType vartype;
+      draw var;
+      std::vector<draw> vertices;
+
+      void draw_line(draw a, draw b);
+      
+      void draw_up(draw a, draw b);
+
+      void draw_down(draw a, draw b);
+
+      void draw_triangle(draw a, draw b, draw c);
+
+      float line_formula(draw p, draw p1, draw p2);
+
+
    };
 }
 
