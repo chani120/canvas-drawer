@@ -30,12 +30,12 @@ void Canvas::end()
 {
 	if(vartype == TRIANGLES && vertices.size() % 3 == 0){
       for(int i = 0; i < vertices.size(); i += 3){
-         drawLine(vertices[i], vertices[i + 1], vertices[i + 2]);
+         draw_line(vertices[i], vertices[i + 1]);
       }
    }
    else if(vartype == LINES && vertices.size() % 2 == 0){
       for(int i = 0; i < vertices.size(); i += 2){
-         draw_triangle(vertices[i], vertices[i + 1]);
+         draw_triangle(vertices[i], vertices[i + 1], vertices[i + 2]);
       }
    }
    vartype = UNDEFINED;
@@ -46,7 +46,7 @@ void Canvas::vertex(int x, int y)
 {
    var.x = x;
    var.y = y;
-   var.col = curpix;
+   var.pix_color = curpix;
    vertices.push_back(var);
 }
 
@@ -104,11 +104,11 @@ void Canvas::draw_up(draw a, draw b){
    int F = 2 * width - height;
 
    for(int y = a.y; y <= b.y; y++){
-      float varr = sqrt(pow(vert[0].x - x, 2) + pow(vert[0].y - y, 2))/sqrt(pow(vert[1].x - x, 2) + pow(vert[1].y - vert[0].y, 2));
+      float varr = sqrt(pow(vertices[0].x - x, 2) + pow(vertices[0].y - y, 2))/sqrt(pow(vertices[1].x - x, 2) + pow(vertices[1].y - vertices[0].y, 2));
       Pixel pix_var; 
-      pix_var.r = vert[0].col.r * (1 - varr) + vert[1].col.r * varr;
-      pix_var.g = vert[0].col.g * (1 - varr) + vert[1].col.g * varr;
-      pix_var.b = vert[0].col.b * (1 - varr) + vert[1].col.b * varr;
+      pix_var.r = vertices[0].pix_color.r * (1 - varr) + vertices[1].pix_color.r * varr;
+      pix_var.g = vertices[0].pix_color.g * (1 - varr) + vertices[1].pix_color.g * varr;
+      pix_var.b = vertices[0].pix_color.b * (1 - varr) + vertices[1].pix_color.b * varr;
       _canvas.set(y,x,pix_var);
 
       if(F > 0){
@@ -134,11 +134,11 @@ void Canvas::draw_down(draw a, draw b){
 
    int F = 2 * height - width;
    for(int x = a.x; x <= b.x; x++){
-      float varr = sqrt(pow(vert[0].x - x, 2) + pow(vert[0].y - y, 2))/sqrt(pow(vert[1].x - x, 2) + pow(vert[1].y - vert[0].y, 2));
+      float varr = sqrt(pow(vertices[0].x - x, 2) + pow(vertices[0].y - y, 2))/sqrt(pow(vertices[1].x - x, 2) + pow(vertices[1].y - vertices[0].y, 2));
       Pixel pix_var; 
-      pix_var.r = vert[0].col.r * (1 - varr) + vert[1].col.r * varr;
-      pix_var.g = vert[0].col.g * (1 - varr) + vert[1].col.g * varr;
-      pix_var.b = vert[0].col.b * (1 - varr) + vert[1].col.b * varr;
+      pix_var.r = vertices[0].pix_color.r * (1 - varr) + vertices[1].pix_color.r * varr;
+      pix_var.g = vertices[0].pix_color.g * (1 - varr) + vertices[1].pix_color.g * varr;
+      pix_var.b = vertices[0].pix_color.b * (1 - varr) + vertices[1].pix_color.b * varr;
       _canvas.set(y,x,pix_var);
 
       if(F > 0){
@@ -163,18 +163,18 @@ void Canvas::draw_triangle(draw a, draw b, draw c){
 
    for(int y = ymin; y < ymax; y++){
       for(int x = xmin; x < xmax; x++){
-         temp.x = x;
-         temp.y = y;
-         temp.col = curCol;
-         float al =  line_formula(temp, b, c) / line_formula(a, b, c);
-         float be = line_formula(temp, c, a) / line_formula(b, c, a);
-         float ga = line_formula(temp, a, b) / line_formula(c, a, b);
+         var.x = x;
+         var.y = y;
+         var.pix_color = curpix;
+         float al =  line_formula(var, b, c) / line_formula(a, b, c);
+         float be = line_formula(var, c, a) / line_formula(b, c, a);
+         float ga = line_formula(var, a, b) / line_formula(c, a, b);
 
          if(al > 0 && be > 0 && ga > 0){
             Pixel pix_var; 
-            pix_var.r = a.col.r * al + b.col.r * be + c.col.r * ga;
-            pix_var.g = a.col.g * al + b.col.g * be + c.col.g * ga;
-            pix_var.b = a.col.b * al + b.col.b * be + c.col.b * ga;
+            pix_var.r = a.pix_color.r * al + b.pix_color.r * be + c.pix_color.r * ga;
+            pix_var.g = a.pix_color.g * al + b.pix_color.g * be + c.pix_color.g * ga;
+            pix_var.b = a.pix_color.b * al + b.pix_color.b * be + c.pix_color.b * ga;
             _canvas.set(y,x,pix_var);
          }
       }
@@ -183,7 +183,8 @@ void Canvas::draw_triangle(draw a, draw b, draw c){
 
 
 float Canvas::line_formula(draw p, draw p1, draw p2){
-   float im = ((float)((p1.y - p2.y) * p.x) + (float)((p2.x - p1.x) * p.y) + (float)(p1.x * p2.y) - (float)(p2.x * p1.y));
-   return im;
+   float eq = ((float)((p1.y - p2.y) * p.x) + (float)((p2.x - p1.x) * p.y) + (float)(p1.x * p2.y) - (float)(p2.x * p1.y));
+   return eq;
 }
+
 
