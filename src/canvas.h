@@ -41,8 +41,6 @@ namespace agl
       void begin(PrimitiveType type);
       void end();
 
-      bruh how u texting me and showing me the texts
-          force of habit
       // Specifiy a vertex at raster position (x,y)
       // x corresponds to the column; y to the row
       void vertex(int x, int y);

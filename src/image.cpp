@@ -477,8 +477,5 @@ namespace agl {
         return image;
     }
 
-    void Image::fill(const Pixel& c) {
-    }
-
 }
 
