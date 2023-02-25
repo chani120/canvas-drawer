@@ -139,8 +139,8 @@ namespace agl {
     }
 
     void Image::fill(const Pixel& c) {
-        for(int i =0; i < myw * myh; i++){
-            set(i,c);
+        for (int i = 0; i < myw * myh; i++) {
+            set(i, c);
         }
     }
 
@@ -477,5 +477,7 @@ namespace agl {
         return image;
     }
 
-}
+    void Image::fill(const Pixel& c) {
+    }
 
+}
