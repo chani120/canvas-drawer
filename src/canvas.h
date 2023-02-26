@@ -63,11 +63,11 @@ namespace agl
 
         void setRad(int radius);
 
-        void draw_rectangle(int cx, int cy, int width, int height);
+        void draw_rectangle(int center_x, int center_y, int width, int height);
 
         void draw_circle(draw x, int a);
 
-        void draw_rose(draw center, int numPetals, int radius, bool filled);
+        void draw_rose(draw center, int petals, int r, bool filled);
 
         void draw_star(int center_x, int center_y, int radius);
 
